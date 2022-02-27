@@ -9,7 +9,25 @@ function App() {
     let uploaded = e.target.files[0];
     setImage(URL.createObjectURL(uploaded));
     setSaveImage(uploaded);
-    console.log(saveImage)
+    console.log(saveImage);
+  }
+  function uploadImage() {
+    if (!saveImage) {
+      alert("upload gambar");
+    } else {
+      let formData = new FormData();
+      formData.append("photo", saveImage);
+      fetch("http://localhost:4000/api/upload", {
+        method: "POST",
+        body: formData,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.status === "success") {
+            window.location.href = data.image;
+          }
+        });
+    }
   }
   return (
     <div className="App">
@@ -35,7 +53,9 @@ function App() {
               accept="image/"
             />
 
-            <button className="btn btn-danger w-100">Save my image</button>
+            <button onClick={uploadImage} className="btn btn-danger w-100">
+              Save my image
+            </button>
           </div>
         </div>
       </div>
